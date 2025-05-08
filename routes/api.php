@@ -3,14 +3,12 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
-Route::get('/produto', function (Request $request) {
-    return 'Minha api';    
-});
-
-Route::get('/cliente', function (Request $request) {
-    return 'Meu cliente';    
+Route::get('/produtos', function (Request $request) {
+    
+    $dados = [
+        'nome' => 'João',
+        'idade' => '18'
+    ];
+    
+    return response()->json($dados);
 });
