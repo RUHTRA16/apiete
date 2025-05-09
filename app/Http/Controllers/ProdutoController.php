@@ -13,7 +13,7 @@ class ProdutoController extends Controller
      */
     public function index()
     {
-        //
+       return Produto::all();
     }
 
     /**
@@ -29,7 +29,7 @@ class ProdutoController extends Controller
      */
     public function store(StoreProdutoRequest $request)
     {
-        //
+        Produto::create();
     }
 
     /**

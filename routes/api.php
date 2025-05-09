@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Controllers\ProdutoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/produtos', function (Request $request) {
+Route::apiResource('/produto',ProdutoController::class);
+
+Route::get('/teste', function (Request $request) {
     
     $dados = [
         'nome' => 'João',
