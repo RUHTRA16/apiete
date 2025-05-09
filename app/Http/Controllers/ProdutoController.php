@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Produto;
 use App\Http\Requests\StoreProdutoRequest;
 use App\Http\Requests\UpdateProdutoRequest;
+use Illuminate\Http\Response;
 
 class ProdutoController extends Controller
 {
@@ -29,7 +30,13 @@ class ProdutoController extends Controller
      */
     public function store(StoreProdutoRequest $request)
     {
-        Produto::create();
+        $dadosValidados = $request->validated();
+        $produto = Produto::create($dadosValidados);
+
+        return response()->json([
+            'message' => 'Criado com sucesso',
+            'data' => $produto,
+        ],Response::HTTP_OK);
     }
 
     /**
