@@ -21,8 +21,8 @@ class StoreProdutoRequest extends FormRequest
         throw new HttpResponseException(response()->json(
             [
                 'status' => false,
-                'message' => 'Validation errors',
-                'errors' => $validator->errors()
+                'mensagem' => 'Erros de Validação',
+                'erros' => $validator->errors()
             ],
             422),
         );
