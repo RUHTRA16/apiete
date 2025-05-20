@@ -58,9 +58,30 @@ class ProdutoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProdutoRequest $request, Produto $produto)
+    public function update(UpdateProdutoRequest $request, $id)
     {
-        //
+        $data = $request->all();
+
+        $produto = Produto::find($id);
+
+        if(!$produto){
+        return response()->json([
+            'message' => 'produto não encontrado',
+        ],Response::HTTP_NOT_FOUND);
+        }
+
+        $response = $produto->update($data);
+
+        if(!$response){
+            return response()->json([
+            'message' => 'Erro ao atualizar produto',
+        ],Response::HTTP_BAD_REQUEST);  
+        }else{
+              return response()->json([
+            'message' => 'produto atualizado com sucesso',
+        ],Response::HTTP_OK);
+        }
+
     }
 
     /**
@@ -70,6 +91,14 @@ class ProdutoController extends Controller
     {
     
         $produto = Produto::findOrFail($id);
+
+
+        if(!$produto){
+        return response()->json([
+            'message' => 'produto não encontrado',
+        ],Response::HTTP_NOT_FOUND);
+        }
+
         $produto->delete();
 
          return response()->json([
