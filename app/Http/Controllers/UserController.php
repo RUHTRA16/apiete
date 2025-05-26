@@ -40,4 +40,34 @@ class UserController extends Controller
                 'message' => 'Logout realizado com sucesso'
             ],Response::HTTP_OK);
     }
+
+    public function registro(Request $request){
+        try{
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required',
+                'password' => 'required|confirmed'
+            ]);
+
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+            ]);
+
+            $token = $user->createToken($request->email)->plainTextToken;
+      
+        return response()->json([
+                'status' => 'success',
+                'user' => $user,
+                'token' => $token
+            ],Response::HTTP_OK);
+
+        }catch(\Exception $e){
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ],Response::HTTP_BAD_REQUEST);
+        }
+    }
 }
