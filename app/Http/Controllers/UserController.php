@@ -32,4 +32,12 @@ class UserController extends Controller
                 'token' => $token
             ],Response::HTTP_OK);
     }
+
+    public function logout(Request $request){
+     $request->user()->currentAccessToken()->delete();
+       return response()->json([
+                'status' => 'success',
+                'message' => 'Logout realizado com sucesso'
+            ],Response::HTTP_OK);
+    }
 }
