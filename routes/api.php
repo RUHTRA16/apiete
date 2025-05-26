@@ -6,12 +6,3 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('/produto',ProdutoController::class);
 
-Route::get('/teste', function (Request $request) {
-    
-    $dados = [
-        'nome' => 'João',
-        'idade' => '18'
-    ];
-    
-    return response()->json($dados);
-});
