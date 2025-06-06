@@ -15,7 +15,7 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::apiResource('/produtos', ProdutoController::class);
     Route::apiResource('/alunos', AlunoController::class);
-    
+
     Route::apiResource('alunos.notas', NotaController::class)->shallow();
     Route::apiResource('alunos.frequencias', FrequenciaController::class)->shallow();
 });

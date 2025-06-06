@@ -15,11 +15,15 @@ class NotaController extends Controller
 
     public function store(Request $request, Aluno $aluno)
     {
+       
         $request->validate([
-            'disciplina' => 'required|string|max:255',
-            'nota' => 'required|numeric|min:0|max:10',
-            'descricao' => 'nullable|string',
-        ]);
+        'disciplina' => 'required|string|max:255',
+        'nota' => 'required|numeric|min:0|max:10',
+        'descricao' => 'nullable|string|max:500',
+    ]);
+
+
+        
 
         $nota = $aluno->notas()->create($request->all());
 

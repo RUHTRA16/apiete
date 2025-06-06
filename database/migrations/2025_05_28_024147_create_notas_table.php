@@ -13,7 +13,7 @@ return new class extends Migration
     {
                 Schema::create('notas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('aluno_id')->constrained('alunos')->onDelete('cascade');
+            $table->foreignId('aluno_id')->constrained('alunos')->onDelete('cascade')->index();
             $table->string('disciplina');
             $table->decimal('nota', 5, 2);
             $table->text('descricao')->nullable();
