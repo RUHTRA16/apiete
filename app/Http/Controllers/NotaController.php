@@ -8,45 +8,39 @@ use Illuminate\Http\Request;
 
 class NotaController extends Controller
 {
-    public function index(Aluno $aluno)
-    {
-        return response()->json($aluno->notas);
-    }
+    // ... (seus métodos index, update, destroy permanecem os mesmos) ...
 
+    // Seu método store original (para POST /api/alunos/{aluno}/notas)
     public function store(Request $request, Aluno $aluno)
     {
-       
         $request->validate([
-        'disciplina' => 'required|string|max:255',
-        'nota' => 'required|numeric|min:0|max:10',
-        'descricao' => 'nullable|string|max:500',
-    ]);
-
-
-        
+            'disciplina' => 'required|string|max:255',
+            'nota' => 'required|numeric|min:0|max:10',
+            'descricao' => 'nullable|string|max:500',
+        ]);
 
         $nota = $aluno->notas()->create($request->all());
 
         return response()->json($nota, 201);
     }
 
-    public function update(Request $request, Nota $nota)
+    // NOVO MÉTODO para lidar com POST /api/notas (se você adicionar essa rota)
+    public function storeFromBody(Request $request)
     {
         $request->validate([
-            'disciplina' => 'sometimes|required|string|max:255',
-            'nota' => 'sometimes|required|numeric|min:0|max:10',
-            'descricao' => 'nullable|string',
+            'aluno_id' => 'required|exists:alunos,id', // Aqui o ID do aluno vem do corpo
+            'disciplina' => 'required|string|max:255',
+            'nota' => 'required|numeric|min:0|max:10',
+            'descricao' => 'nullable|string|max:500',
         ]);
 
-        $nota->update($request->all());
+        $nota = Nota::create([
+            'aluno_id' => $request->aluno_id,
+            'disciplina' => $request->disciplina,
+            'nota' => $request->nota,
+            'descricao' => $request->descricao,
+        ]);
 
-        return response()->json($nota);
-    }
-
-    public function destroy(Nota $nota)
-    {
-        $nota->delete();
-
-        return response()->json(['message' => 'Nota deletada com sucesso']);
+        return response()->json($nota, 201);
     }
 }
