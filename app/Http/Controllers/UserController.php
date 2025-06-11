@@ -7,67 +7,78 @@ use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-
 class UserController extends Controller
 {
-    public function login(Request $request){
-        $request->only([
-                'email',
-                'password'
-            ]);
-        $user = User::where('email',$request->email)->first();
+    // Login do usuário
+    public function login(Request $request)
+    {
+        // Valida os dados de entrada
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-        if(!$user || !Hash::check($request->password,$user->password)){
+        // Busca usuário pelo email
+        $user = User::where('email', $credentials['email'])->first();
+
+        // Verifica se usuário existe e senha confere
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Email ou senha inválido'
-            ],Response::HTTP_BAD_REQUEST);
+                'message' => 'Email ou senha inválidos',
+            ], Response::HTTP_UNAUTHORIZED);
         }
 
-        $token = $user->createToken($request->email)->plainTextToken;
-      
+        // Cria token para autenticação via Laravel Sanctum
+        $token = $user->createToken($user->email)->plainTextToken;
+
         return response()->json([
-                'status' => 'success',
-                'user' => $user,
-                'token' => $token
-            ],Response::HTTP_OK);
+            'status' => 'success',
+            'user' => $user,
+            'token' => $token,
+        ], Response::HTTP_OK);
     }
 
-    public function logout(Request $request){
-     $request->user()->currentAccessToken()->delete();
-       return response()->json([
-                'status' => 'success',
-                'message' => 'Logout realizado com sucesso'
-            ],Response::HTTP_OK);
+    // Logout do usuário (revoga o token atual)
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Logout realizado com sucesso',
+        ], Response::HTTP_OK);
     }
 
-    public function registro(Request $request){
-        try{
-            $request->validate([
-                'name' => 'required',
-                'email' => 'required',
-                'password' => 'required'
-            ]);
+    // Registro de novo usuário
+    public function registro(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6',
+        ]);
 
+        try {
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
             ]);
 
-            $token = $user->createToken($request->email)->plainTextToken;
-      
-        return response()->json([
+            $token = $user->createToken($user->email)->plainTextToken;
+
+            return response()->json([
                 'status' => 'success',
                 'user' => $user,
-                'token' => $token
-            ],Response::HTTP_OK);
+                'token' => $token,
+            ], Response::HTTP_CREATED);
 
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
-            ],Response::HTTP_BAD_REQUEST);
+                'message' => 'Erro ao registrar usuário: ' . $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
         }
     }
 }
