@@ -27,6 +27,7 @@ class StoreAlunoRequest extends FormRequest
         return [
             'nome' => 'required|string|max:255',
             'email' => 'required|email|unique:alunos,email',
+            'idade' => 'nullable|integer',
             'telefone' => 'nullable|string|max:20',
             'data_nascimento' => 'nullable|date',
         ];

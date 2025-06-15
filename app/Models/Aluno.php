@@ -10,11 +10,12 @@ class Aluno extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nome',
-        'email',
-        'telefone',
-        'data_nascimento',
-    ];
+    'nome',
+    'email',          // adicionar esta linha
+    'idade',
+    'telefone',
+    'data_nascimento',
+];
 
     public function notas()
     {

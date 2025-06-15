@@ -15,12 +15,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [UserController::class, 'logout']);
 
     Route::apiResource('/produtos', ProdutoController::class);
+    Route::middleware('auth:sanctum')->group(function () {
+    
+});
+
     Route::apiResource('/alunos', AlunoController::class);
 
-    // AQUI ESTÁ A MUDANÇA: Adicionando uma rota POST para /api/notas
-    Route::post('/notas', [NotaController::class, 'storeFromBody']); // Novo método ou ajuste o store
+    Route::post('/notas', [NotaController::class, 'storeFromBody']);
 
-    Route::apiResource('alunos.notas', NotaController::class)->shallow(); 
-
+    Route::apiResource('alunos.notas', NotaController::class)->shallow();
     Route::apiResource('alunos.frequencias', FrequenciaController::class)->shallow();
 });

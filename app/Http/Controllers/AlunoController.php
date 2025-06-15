@@ -45,6 +45,6 @@ class AlunoController extends Controller
             return response()->json(['message' => 'Aluno não encontrado'], 404);
         }
         $aluno->delete();
-        return response()->json(['message' => 'Aluno deletado']);
+        return response()->json(['message' => 'Aluno deletado com sucesso']);
     }
 }
